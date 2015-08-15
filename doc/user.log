@@ -1,0 +1,5 @@
+#1.ubuntu burn the Raspberry.img
+sudo dd if=/from/Raspberry.img of=/dev/sd*
+you need to use fdisk -l command to view the device number sd card.
+if you want to see dd command programming schedule, you can use the command sudo\
+watch -n 10 pkill -USR1 ^dd$

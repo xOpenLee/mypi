@@ -2,4 +2,87 @@
 sudo dd if=/from/Raspberry.img of=/dev/sd*
 you need to use fdisk -l command to view the device number sd card.
 if you want to see dd command programming schedule, you can use the command sudo\
-watch -n 10 pkill -USR1 ^dd$
+   watch -n 10 pkill -USR1 ^dd$
+
+#2.login RaspberryPI 
+First use RaspberryPI, login ID pi, password raspberrry
+if you are accustomed to using the graphical interface, enter the startx command
+
+#3.change root password
+RaspOS no default root password, if you want to change it, input sudo passwd root
+command, then enter the same passwd twice.
+
+#3.use wifi connect to internet
+First,you need to back up /etc/network/interfaces, prevent modification errors 
+do not know how to recover using sudo cp /etc/network/interfaces /etc/network/interfaces 
+second,using sudo vi /etc/network/interfaces 
+auto lo
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet manual
+
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet dhcp 
+wpa-ssid "your wifi ssid"
+wpa-psk "your wifi password"
+
+#4.vnc remote desktop
+First, install vncserver in pi,sudo apt-get install tightvncserver
+Second,config vncserver in pi, vncserver :1 -geometry 1024x768 -depth 24.if you 
+need to config Router to forward port number 5901
+Third, use Remmina Remote Desktop client in ubuntu,
+Name:pi
+group:myself
+protocol:vnc-virtual Networking Computing
+Server:192.168.0.103:2
+
+#5.config RaspberryPI keyboard timezone
+if you want to reconfig PI, run sudo raspo-config
+
+#6.Use samba file share
+First,sudo apt-get install samba samba-common-bin
+Second, config /etc/samba/smb.conf 
+pi@raspberrypi ~ $ cat /etc/samba/smb.conf | tail -5
+comment = RaspberryPI private smb
+path = /home/pi/smb/private
+browseable = yes
+pubilc = yes
+writeable = yes
+Third,ubuntu mount RaspberryPI samba file dir
+when ubuntu startup, mount the PI samba
+//192.168.0.103/pubilc /home/xopenlee/git/RaspberryPI/piSmb/ cifs username=pi,password=xxxx
+
+#7. gitosis--code version control
+a.PI#:sudo apt-get install openssh-server openssh-client git-core python-setuptools
+b.PI#:ssh-keygen -t rsa
+c.PI#:sudo mkdir /home/git/repositories && sudo chmod 775 /home/git/repositories
+d.PI#:git config --global user.name "myname" && PI#:git config --global user.email "myname@server"
+e.PI#:cd /tmp && clone https://github.com/tv42/gitosis.git && cd gitosis && \
+        sudo python setup.py install
+f.PI#: cp ~/.ssh/id_rsa.pub /tmp
+g.PI#: sudo -H -u git gitosis-init < /tmp/id_rsa.pub
+h.PI#:sudo chmod 755 /home/pi/repositories/gitosis-admin.git/hooks/post-update
+i.PI#:cd ~ && git clone pi@127.0.0.1:gitosis-admin.git 
+j.PI#: cd gitosis-admin
+pi@raspberrypi ~ $ cat gitosis-admin/gitosis.conf
+[gitosis]
+
+[group gitosis-admin]
+members = pi@raspberrypi
+writable = gitosis-admin
+
+[group developers]
+members = xopenlee@ThinkPad pi@raspberrypi
+writable = helloworld 
+k.PI#:copy xopenlee@ThinkPad id_rsa.pub to /home/pi/gitosis/keyDir/xopenlee@ThinkPad.pub
+l.xopenlee@ThinkPad: git clone pi@<serverip>:helloworld.git
+
+
+
+
+
+
+

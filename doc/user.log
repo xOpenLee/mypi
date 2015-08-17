@@ -80,7 +80,42 @@ writable = helloworld
 k.PI#:copy xopenlee@ThinkPad id_rsa.pub to /home/pi/gitosis/keyDir/xopenlee@ThinkPad.pub
 l.xopenlee@ThinkPad: git clone pi@<serverip>:helloworld.git
 
+#8.apache2 + gitosis
+a. install apache2 gitweb, sudo apt-get install apache2 gitweb
+b.modify /etc/gitweb.conf
+git@raspberrypi ~/repositories/tst-proj.git $ cat /etc/gitweb.conf 
+ path to git projects (<project>.git)
+ $projectroot = "/home/git/repositories";
 
+ # directory to use for temp files
+ $git_temp = "/tmp";
+
+ # target of the home link on top of all pages
+ $home_link = $my_uri || "/";
+
+ # html text to include at home page
+ $home_text = "indextext.html";
+
+ # file with project list; by default, simply scan the projectroot dir.
+ $projects_list = $projectroot;
+
+ # stylesheet to use
+ @stylesheets = ("/gitweb/static/gitweb.css");
+
+ # javascript code for gitweb
+ $javascript = "gitweb/static/gitweb.js";
+
+ # logo to use
+ $logo = "/gitweb/static/git-logo.png";
+
+ # the 'favicon'
+ $favicon = "/gitweb/static/git-favicon.png";
+
+ # git-diff-tree(1) options to use for generated patches
+ #@diff_opts = ("-M");
+ @diff_opts = ();
+
+c.login web page:http://192.168.0.103/cgi-bin/gitweb.cgi
 
 
 
